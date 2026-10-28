@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Krokomierz</string>
+    <string name="title_activity_main">Krokomierz</string>
+    <string name="package_name">top.multidev.krokomierz</string>
+    <string name="custom_url_scheme">top.multidev.krokomierz</string>
+</resources>
