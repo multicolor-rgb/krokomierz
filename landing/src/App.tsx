@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import QRCode from 'qrcode';
+import { CookieNotice } from './CookieNotice';
+import { CONTACT_EMAIL } from './legalContent';
 import {
   APK_DATE,
   APK_FILE,
@@ -539,9 +541,10 @@ export default function App() {
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted">{t.footer.legal}</p>
             <ul className="mt-3 space-y-2 text-[12px] font-bold text-white/75">
-              <li><a href={`${PWA_URL}`} className="hover:text-lime">{t.footer.privacy}</a></li>
+              <li><a href={`${import.meta.env.BASE_URL}privacy/`} className="hover:text-lime">{t.footer.privacy}</a></li>
+              <li><a href={`${import.meta.env.BASE_URL}cookies/`} className="hover:text-lime">{t.footer.cookies}</a></li>
               <li><a href={GITHUB} target="_blank" rel="noreferrer" className="hover:text-lime">{t.footer.license}</a></li>
-              <li><a href={GITHUB} target="_blank" rel="noreferrer" className="hover:text-lime">{t.footer.contact}</a></li>
+              <li><a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-lime">{CONTACT_EMAIL}</a></li>
             </ul>
           </div>
         </div>
@@ -553,6 +556,7 @@ export default function App() {
           </span>
         </div>
       </footer>
+      <CookieNotice lang={lang} />
     </div>
   );
 }

@@ -3,7 +3,7 @@ export type Lang = 'pl' | 'en';
 export const APK_FILE =
   'https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk';
 export const APK_SIZE = '3,6 MB';
-export const APK_VERSION = '1.1.1';
+export const APK_VERSION = '1.1.2';
 export const APK_DATE = '28.10.2026';
 export const SHA256 =
   'https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk.sha256';
@@ -159,6 +159,7 @@ export const copy = {
       pwa: 'Wersja PWA',
       github: 'GitHub',
       privacy: 'Prywatność',
+      cookies: 'Cookies',
       license: 'Licencja MIT',
       contact: 'Kontakt',
       note: 'Zbudowane z myślą o ruchu. © 2026 Krokomierz.',
@@ -312,6 +313,7 @@ export const copy = {
       pwa: 'Web version',
       github: 'GitHub',
       privacy: 'Privacy',
+      cookies: 'Cookies',
       license: 'MIT License',
       contact: 'Contact',
       note: 'Built for movement. © 2026 Krokomierz.',

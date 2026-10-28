@@ -1,7 +1,7 @@
 import { isNative } from './nativeSteps';
 
-export const APP_VERSION = '1.1.1';
-export const APP_VERSION_CODE = 3;
+export const APP_VERSION = '1.1.2';
+export const APP_VERSION_CODE = 4;
 export const LANDING_URL = 'https://krokomierz.multidev.top';
 export const APK_URL =
   'https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk';

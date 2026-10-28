@@ -910,6 +910,33 @@ export function Settings() {
           <Icon name="shield" size={20} className="mt-0.5 shrink-0" />
           <p className="text-[12px] font-semibold leading-relaxed">{t('privacyText')}</p>
         </div>
+        <div className="mt-3 space-y-2">
+          <a
+            href={`${LANDING_URL}/privacy/`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-between rounded-2xl bg-white/[0.04] px-4 py-3 text-[12px] font-extrabold"
+          >
+            {t('privacyFull')}
+            <Icon name="arrow" size={15} className="text-lime" />
+          </a>
+          <a
+            href={`${LANDING_URL}/cookies/`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-between rounded-2xl bg-white/[0.04] px-4 py-3 text-[12px] font-extrabold"
+          >
+            {t('cookiesPolicy')}
+            <Icon name="arrow" size={15} className="text-lime" />
+          </a>
+          <a
+            href="mailto:gramodrana1@gmail.com"
+            className="flex items-center justify-between rounded-2xl bg-white/[0.04] px-4 py-3 text-[12px] font-extrabold"
+          >
+            gramodrana1@gmail.com
+            <Icon name="arrow" size={15} className="text-lime" />
+          </a>
+        </div>
         <button type="button" onClick={() => setSheet(null)} className="btn-primary mt-4 w-full">
           {t('close')}
         </button>
