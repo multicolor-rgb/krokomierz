@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+  body {
+    @apply bg-ink text-white font-sans antialiased;
+    background-image: radial-gradient(70% 45% at 85% -5%, rgba(198, 255, 61, 0.13), transparent 65%),
+      radial-gradient(55% 35% at -10% 25%, rgba(77, 225, 255, 0.08), transparent 70%);
+    background-attachment: fixed;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+  ::selection {
+    @apply bg-lime text-ink;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-3xl border border-white/[0.06] bg-surface/80 p-5 shadow-card backdrop-blur-xl;
+  }
+  .card-tight {
+    @apply rounded-2xl border border-white/[0.06] bg-surface/80 p-4;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-extrabold transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply btn bg-lime-gradient text-ink shadow-glow;
+  }
+  .btn-ghost {
+    @apply btn border border-white/10 bg-white/[0.04] text-white;
+  }
+  .btn-dark {
+    @apply btn bg-surface2 text-white border border-white/10;
+  }
+  .chip {
+    @apply rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-bold text-muted transition;
+  }
+  .chip-active {
+    @apply border-lime/40 bg-lime/10 text-lime;
+  }
+  .field {
+    @apply w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base font-bold text-white outline-none transition placeholder:font-medium placeholder:text-muted/60 focus:border-lime/50 focus:bg-white/[0.06];
+  }
+  .label {
+    @apply mb-2 block text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted;
+  }
+  .section-title {
+    @apply text-lg font-extrabold tracking-tight;
+  }
+  .muted {
+    @apply text-sm font-medium text-muted;
+  }
+  .safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6.25rem);
+  }
+  .safe-top {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-lime-gradient bg-clip-text text-transparent;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
