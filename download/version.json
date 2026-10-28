@@ -2,11 +2,7 @@
   "version": "1.1.1",
   "versionCode": 3,
   "url": "https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk",
-  "size": 3802235,
-  "sha256": "a74ea22a3146f4c0752cb10f8b4a778203a3753dc92bb5dae31ab3d5e10b6872",
-  "date": "2026-10-28",
-  "notes": {
-    "pl": "Tryb cichy, fallback akcelerometra dla Redmi 7, diagnostyka sensora, długość kroku i czułość.",
-    "en": "Silent mode, accelerometer fallback for Redmi 7, sensor diagnostics, stride length and sensitivity."
-  }
+  "size": 3802237,
+  "sha256": "48897a092dd0d929b6066a6ebc7836473ef1e9ea0917f77571c6fd7f1b519444",
+  "date": "2026-10-28"
 }
