@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAppStore } from '../store/useAppStore';
 import { useT } from '../lib/i18n';
-import { bmi, recommendedSteps } from '../lib/calc';
+import { autoStrideCm, bmi, recommendedSteps } from '../lib/calc';
 import { formatNumber } from '../lib/format';
 import { isNative, StepCounter } from '../lib/nativeSteps';
 import { requestNotificationPermission, scheduleNativeReminders } from '../lib/notifications';
@@ -28,6 +28,7 @@ export function Onboarding() {
   const [targetWeight, setTargetWeight] = useState(70);
   const [reminders, setReminders] = useState(true);
   const [time, setTime] = useState('19:00');
+  const [silentMode, setSilentMode] = useState(isNative);
   const [saving, setSaving] = useState(false);
 
   const profile: Profile = {
@@ -39,6 +40,7 @@ export function Onboarding() {
     goal,
     targetWeightKg: goal === 'lose' ? targetWeight : null,
     startWeightKg: goal === 'lose' ? weight : undefined,
+    strideCm: null,
   };
   const recommended = recommendedSteps(profile);
   const bmiValue = bmi(profile);
@@ -60,17 +62,17 @@ export function Onboarding() {
     if (saving) return;
     setSaving(true);
     let granted = false;
-    if (reminders) granted = await requestNotificationPermission();
+    if (reminders || silentMode) granted = await requestNotificationPermission();
     await saveOnboarding(profile, {
       lang,
-      tracking: isNative,
+      silentMode: isNative && silentMode && granted,
       notifications: {
         enabled: reminders && granted,
         time,
         days: [1, 2, 3, 4, 5, 6, 0],
       },
     });
-    if (isNative) {
+    if (isNative && silentMode) {
       try {
         await StepCounter.start();
         const today = await StepCounter.getToday();
@@ -194,11 +196,21 @@ export function Onboarding() {
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
                   <NumberField label={t('age')} value={age} onChange={setAge} min={12} max={100} unit={t('years')} />
                   <NumberField label={t('height')} value={height} onChange={setHeight} min={120} max={220} unit="cm" />
+                  <NumberField label={t('weight')} value={weight} onChange={setWeight} min={35} max={200} unit="kg" />
                 </div>
-                <NumberField label={t('weight')} value={weight} onChange={setWeight} min={35} max={200} unit="kg" />
+                <div className="card-tight flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-extrabold uppercase tracking-widest text-muted">{t('obStride')}</p>
+                    <p className="mt-1 text-sm font-extrabold tabular">
+                      {autoStrideCm(height, sex)} cm
+                      <span className="ml-1 text-[10px] font-bold text-lime">{t('strideAuto')}</span>
+                    </p>
+                  </div>
+                  <Icon name="ruler" size={20} className="text-lime" />
+                </div>
                 <div className="card-tight flex items-center justify-between">
                   <div>
                     <p className="text-[10px] font-extrabold uppercase tracking-widest text-muted">{t('bmiLabel')}</p>
@@ -379,6 +391,24 @@ export function Onboarding() {
                   </label>
                 )}
               </div>
+
+              {isNative && (
+                <div className="card mt-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-10 w-10 place-items-center rounded-2xl bg-white/5 text-lime">
+                        <Icon name="footsteps" size={19} />
+                      </span>
+                      <div>
+                        <p className="text-sm font-extrabold">{t('obSilentTitle')}</p>
+                        <p className="text-[11px] font-medium text-muted">{t('obSilentSub')}</p>
+                      </div>
+                    </div>
+                    <Toggle checked={silentMode} onChange={setSilentMode} label={t('obSilentTitle')} />
+                  </div>
+                  <p className="mt-3 text-[10px] font-medium text-muted">{t('obSilentNote')}</p>
+                </div>
+              )}
 
               <div className="mt-auto space-y-3 pt-6">
                 <button type="button" onClick={finish} disabled={saving} className="btn-primary w-full">

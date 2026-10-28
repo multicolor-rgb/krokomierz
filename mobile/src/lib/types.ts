@@ -3,6 +3,7 @@ export type Sex = 'male' | 'female' | 'other';
 export type Activity = 'low' | 'moderate' | 'high';
 export type GoalType = 'lose' | 'maintain' | 'health';
 export type Units = 'metric' | 'imperial';
+export type SensorMode = 'auto' | 'counter' | 'detector' | 'accelerometer';
 export type Source = 'sensor' | 'manual' | 'native' | 'demo';
 export type Tab = 'home' | 'stats' | 'track' | 'badges' | 'settings' | 'goals';
 
@@ -15,6 +16,7 @@ export interface Profile {
   goal: GoalType;
   targetWeightKg: number | null;
   startWeightKg?: number;
+  strideCm: number | null;
 }
 
 export interface NotificationSettings {
@@ -31,7 +33,8 @@ export interface Settings {
   wakeLock: boolean;
   dailyGoalOverride: number | null;
   autoAdjust: boolean;
-  tracking: boolean;
+  silentMode: boolean;
+  sensorMode: SensorMode;
   onboarded: boolean;
 }
 
@@ -72,6 +75,7 @@ export const DEFAULT_SETTINGS: Settings = {
   wakeLock: true,
   dailyGoalOverride: null,
   autoAdjust: true,
-  tracking: false,
+  silentMode: false,
+  sensorMode: 'auto',
   onboarded: false,
 };

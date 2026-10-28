@@ -1,12 +1,13 @@
 # Krokomierz 🏃‍♂️
 
-Nowoczesny krokomierz w wersji **PWA** i **Android APK**. Ciemny, sportowy interfejs, cele wyliczane z profilu, statystyki, 28 osiągnięć i przypomnienia. Wszystkie dane zostają na urządzeniu — bez konta, chmury i reklam.
+Nowoczesny krokomierz w wersji **PWA** i **Android APK**. Ciemny, sportowy interfejs, cele wyliczane z profilu, statystyki, 28 osiągnięć, tryb cichy i przypomnienia. Wszystkie dane zostają na urządzeniu — bez konta, chmury i reklam.
 
-- 🌐 Strona i pobieranie: **https://krokomierz.multidev.top**
+- 🌐 Strona: **https://krokomierz.multidev.top** (GitHub Pages, custom domain)
 - 📱 Wersja PWA: **https://krokomierz.multidev.top/app/**
-- 💾 APK: **https://krokomierz.multidev.top/download/krokomierz-1.0.0.apk?v=3**
+- 💾 APK: **https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk**
 - 💻 Repozytorium: **https://github.com/multicolor-rgb/krokomierz**
-- 🚀 Releases: **https://github.com/multicolor-rgb/krokomierz/releases/tag/v1.0.0**
+- 🚀 Releases: **https://github.com/multicolor-rgb/krokomierz/releases**
+- 🧪 Podgląd Pages: **https://multicolor-rgb.github.io/krokomierz/**
 
 ## Zrzuty ekranu
 
@@ -18,7 +19,11 @@ Nowoczesny krokomierz w wersji **PWA** i **Android APK**. Ciemny, sportowy inter
 
 | Funkcja | Opis |
 |---|---|
-| **Licznik kroków** | W APK natywny sensor `TYPE_STEP_COUNTER` + foreground service (liczy w tle). W przeglądarce akcelerometr (`DeviceMotion`) z filtrem i detekcją szczytów. |
+| **Licznik kroków** | APK: `TYPE_STEP_COUNTER` → `TYPE_STEP_DETECTOR` → akcelerometr (fallback dla Redmi 7 i telefonów bez step countera) + foreground service. PWA: akcelerometr (`DeviceMotion`). |
+| **Tryb cichy** | Autostart po restarcie, liczenie bez otwierania aplikacji, ciche powiadomienie usługi, wyłączanie optymalizacji baterii i skrót do autostartu MIUI. |
+| **Diagnostyka** | W APK: dostępność sensorów, aktywny sensor, uprawnienia, stan usługi, bateria, ostatnie zdarzenie, model i test 20 kroków. |
+| **Długość kroku** | Automatycznie ze wzrostu (`0,415` / `0,413`) lub ręcznie 40–120 cm; używana do dystansu. |
+| **Czułość** | Presety i suwak 0,5–2,0×; natywnie dla akcelerometra, w PWA dla `DeviceMotion`. |
 | **Mądre cele** | Rekomendacja z wieku, wzrostu, wagi, płci, aktywności, BMI i celu. Automatyczna progresja do +20%. |
 | **Statystyki** | Dzień / 7 dni / 30 dni, dystans, kalorie, aktywne minuty, rekordy, skuteczność celu, historia. |
 | **Osiągnięcia** | 28 odznak: serie, rekordy, kamienie milowe (1 000 → 1 000 000 kroków), ranny ptaszek, nocny marek. |
@@ -38,7 +43,8 @@ krokomierz/
 ├── landing/                 # strona internetowa PL/EN
 ├── scripts/
 │   ├── build-apk.sh         # build + podpis + version.json
-│   └── deploy.sh            # publikacja strony i PWA
+│   ├── deploy.sh            # publikacja awaryjna na nginx
+│   └── security-check.sh    # blokada .git i źródeł
 ├── download/                # APK, AAB, SHA-256, version.json
 └── assets/                  # źródłowy logotyp SVG
 ```
@@ -92,9 +98,10 @@ ANDROID_HOME=/ścieżka/do/android-sdk \
 Wynik:
 
 ```
-download/krokomierz-1.0.0.apk
-download/krokomierz-1.0.0.aab
-download/krokomierz-1.0.0.apk.sha256
+download/krokomierz-1.1.0.apk
+download/krokomierz-1.1.0.aab
+download/krokomierz-1.1.0.apk.sha256
+download/krokomierz-latest.apk
 download/version.json
 ```
 
@@ -115,13 +122,33 @@ Klucz release **nigdy nie trafia do repozytorium**. Trzymaj go poza projektem i 
 ./scripts/deploy.sh
 ```
 
-Skrypt buduje PWA (`base=/app/`) i stronę, a następnie publikuje:
+### GitHub Pages (docelowo)
 
-- `/` — strona PL/EN,
-- `/app/` — aplikacja PWA,
-- `/download/` — APK, AAB, SHA-256, `version.json`.
+Strona i PWA są publikowane przez `.github/workflows/pages.yml` na GitHub Pages. APK/AAB pozostają w GitHub Releases, a `version.json` jest kopiowany na Pages z najnowszego Release.
 
-Nginx (vhost `krokomierz.multidev.top`) serwuje katalog repozytorium. HTTPS zapewnia Cloudflare.
+- podgląd project site: `https://multicolor-rgb.github.io/krokomierz/`
+- custom domain: `https://krokomierz.multidev.top/`
+
+DNS w Cloudflare:
+
+| Typ | Nazwa | Wartość | Proxy |
+|---|---|---|---|
+| CNAME | `krokomierz` | `multicolor-rgb.github.io` | **DNS only** (szara chmurka) |
+
+Po propagacji DNS ustaw w GitHub → Settings → Pages custom domain `krokomierz.multidev.top` i włącz **Enforce HTTPS**. Nie używaj orange cloud — GitHub Pages + proxy Cloudflare mogą powodować pętle SSL.
+
+### Nginx (fallback)
+
+`./scripts/deploy.sh` publikuje awaryjnie na stary nginx. Katalogi źródłowe i `.git` są blokowane przez `chmod 700` oraz `scripts/security-check.sh`.
+
+## Bezpieczeństwo
+
+`.git` został przeniesiony poza web-root (`/home/multi/krokomierz.git` + plik `gitdir`). Katalogi `mobile`, `landing`, `scripts`, `assets`, `.github` mają `chmod 700`, więc nginx nie może ich serwować. Sprawdzenie:
+
+```bash
+./scripts/security-check.sh
+# /.git/config, /mobile/..., /scripts/... → 403/404
+```
 
 ## Natywny licznik kroków (Android)
 

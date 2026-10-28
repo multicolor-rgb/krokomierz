@@ -163,7 +163,7 @@ export function Dashboard() {
           {t('liveSession')}
         </p>
         <p className="mt-1 text-xl font-extrabold tracking-tight">
-          {settings.tracking && settings.onboarded ? t('keepTracking') : t('startTracking')}
+          {settings.silentMode && settings.onboarded ? t('keepTracking') : t('startTracking')}
         </p>
         <p className="mt-0.5 text-xs font-bold text-ink/60">
           {formatNumber(steps, lang)} {t('steps')} · {t('today')}

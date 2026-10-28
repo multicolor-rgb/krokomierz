@@ -129,7 +129,7 @@ export default function App() {
 
   useEffect(() => {
     if (!qrRef.current) return;
-    void QRCode.toCanvas(qrRef.current, `${APP_URL}${APK_FILE}`, {
+    void QRCode.toCanvas(qrRef.current, APK_FILE, {
       width: 168,
       margin: 1,
       color: { dark: '#08090B', light: '#C6FF3D' },
@@ -149,7 +149,7 @@ export default function App() {
       <header className="sticky top-0 z-50 border-b border-white/5 bg-ink/75 backdrop-blur-2xl">
         <div className="container-page flex h-16 items-center justify-between gap-3">
           <a href="#" className="flex items-center gap-2.5">
-            <img src="/logo.svg" alt="Krokomierz" className="h-9 w-9 rounded-xl" />
+            <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Krokomierz" className="h-9 w-9 rounded-xl" />
             <span className="text-[15px] font-extrabold tracking-tight">Krokomierz</span>
           </a>
           <nav className="hidden items-center gap-7 text-[13px] font-bold text-muted md:flex">
@@ -217,7 +217,7 @@ export default function App() {
               <div className="relative mx-auto w-[292px] sm:w-[330px]">
                 <div className="absolute -inset-10 rounded-full bg-lime/10 blur-3xl" />
                 <div className="relative animate-float">
-                  <PhoneFrame src={`/screens/home-${lang}.png`} alt="Krokomierz — pulpit" />
+                  <PhoneFrame src={`${import.meta.env.BASE_URL}screens/home-${lang}.png`} alt="Krokomierz — pulpit" />
                 </div>
 
                 <div className="glass absolute -left-24 top-24 hidden w-[178px] items-center gap-3 p-3.5 shadow-phone sm:flex">
@@ -298,7 +298,7 @@ export default function App() {
                 <Reveal key={screen.key} delay={index * 0.06} className="text-center">
                   <div className="group relative mx-auto w-full max-w-[230px] transition duration-500 hover:-translate-y-2">
                     <PhoneFrame
-                      src={`/screens/${screen.key}-${lang}.png`}
+                      src={`${import.meta.env.BASE_URL}screens/${screen.key}-${lang}.png`}
                       alt={`Krokomierz — ${screen.label}`}
                       className="!rounded-[2.2rem] !p-1.5"
                     />
@@ -437,7 +437,7 @@ export default function App() {
 
                   <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] font-bold text-muted">
                     <span className="rounded-full bg-white/5 px-2.5 py-1">{t.download.requirements}</span>
-                    <a href={`/${SHA256}`} className="underline decoration-white/20 underline-offset-4 hover:text-white">
+                    <a href={SHA256} className="underline decoration-white/20 underline-offset-4 hover:text-white">
                       {t.download.sha}
                     </a>
                     <a href={RELEASES} target="_blank" rel="noreferrer" className="hover:text-white">
@@ -514,7 +514,7 @@ export default function App() {
         <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-2.5">
-              <img src="/logo.svg" alt="" className="h-9 w-9 rounded-xl" />
+              <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" className="h-9 w-9 rounded-xl" />
               <span className="text-sm font-extrabold">Krokomierz</span>
             </div>
             <p className="muted mt-4 max-w-xs text-[12px]">{t.footer.tagline}</p>
@@ -532,7 +532,7 @@ export default function App() {
             <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted">{t.footer.resources}</p>
             <ul className="mt-3 space-y-2 text-[12px] font-bold text-white/75">
               <li><a href={RELEASES} target="_blank" rel="noreferrer" className="hover:text-lime">{t.footer.github}</a></li>
-              <li><a href={`/${SHA256}`} className="hover:text-lime">SHA-256</a></li>
+              <li><a href={SHA256} className="hover:text-lime">SHA-256</a></li>
               <li><a href="#faq" className="hover:text-lime">FAQ</a></li>
             </ul>
           </div>

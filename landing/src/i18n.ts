@@ -1,11 +1,13 @@
 export type Lang = 'pl' | 'en';
 
-export const APK_FILE = '/download/krokomierz-1.0.0.apk?v=3';
-export const APK_SIZE = '3,7 MB';
-export const APK_VERSION = '1.0.0';
+export const APK_FILE =
+  'https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk';
+export const APK_SIZE = '3,6 MB';
+export const APK_VERSION = '1.1.0';
 export const APK_DATE = '28.10.2026';
-export const SHA256 = 'download/krokomierz-1.0.0.apk.sha256';
-export const PWA_URL = '/app/';
+export const SHA256 =
+  'https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk.sha256';
+export const PWA_URL = `${import.meta.env.BASE_URL}app/`;
 export const APP_URL = 'https://krokomierz.multidev.top';
 
 export const copy = {

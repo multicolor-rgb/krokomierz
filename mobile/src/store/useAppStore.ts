@@ -60,12 +60,15 @@ const demoProfile: Profile = {
   goal: 'health',
   targetWeightKg: 72,
   startWeightKg: 80,
+  strideCm: null,
 };
 
 function mergeSettings(raw: Partial<Settings> | undefined): Settings {
+  const legacy = raw as (Partial<Settings> & { tracking?: boolean }) | undefined;
   return {
     ...DEFAULT_SETTINGS,
     ...(raw ?? {}),
+    silentMode: legacy?.silentMode ?? legacy?.tracking ?? DEFAULT_SETTINGS.silentMode,
     notifications: {
       ...DEFAULT_SETTINGS.notifications,
       ...(raw?.notifications ?? {}),
@@ -105,12 +108,12 @@ export const useAppStore = create<AppState>()((set, get) => ({
     if (langParam === 'pl' || langParam === 'en') settings = { ...settings, lang: langParam };
 
     if (!profile) {
-      settings = { ...settings, tracking: isNative };
+      settings = { ...settings, silentMode: isNative };
     }
 
     if (demo && !profile) {
       profile = demoProfile;
-      settings = { ...settings, onboarded: true, lang: settings.lang, tracking: false };
+      settings = { ...settings, onboarded: true, lang: settings.lang, silentMode: false };
       dayLogs = generateDemoDays(profile, effectiveGoal(profile, settings, []), 45);
       await db.days.bulkPut(dayLogs);
     }
@@ -257,7 +260,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
     await db.open();
     set({
       profile: null,
-      settings: { ...DEFAULT_SETTINGS, tracking: isNative },
+      settings: { ...DEFAULT_SETTINGS, silentMode: isNative },
       days: {},
       achievements: {},
       goal: 10000,

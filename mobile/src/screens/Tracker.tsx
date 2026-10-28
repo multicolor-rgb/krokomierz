@@ -3,11 +3,12 @@ import { useAppStore } from '../store/useAppStore';
 import { useT } from '../lib/i18n';
 import { todayKey } from '../lib/calc';
 import { formatNumber } from '../lib/format';
-import { isNative, StepCounter } from '../lib/nativeSteps';
+import { isNative, StepCounter, type ActiveSensor } from '../lib/nativeSteps';
 import { usePedometer, useWakeLock } from '../lib/pedometer';
 import { Icon } from '../components/icons';
 import { NumberField, Sheet, Toggle } from '../components/ui';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { requestNotificationPermission } from '../lib/notifications';
 
 export function Tracker() {
   const t = useT();
@@ -30,6 +31,8 @@ export function Tracker() {
   const [demoOn, setDemoOn] = useState(false);
   const [sheet, setSheet] = useState(false);
   const [custom, setCustom] = useState(500);
+  const [sensor, setSensor] = useState<ActiveSensor>('none');
+  const [nativeError, setNativeError] = useState(false);
   const pending = useRef(0);
 
   const flush = () => {
@@ -70,6 +73,24 @@ export function Tracker() {
 
   useEffect(() => () => flush(), []);
 
+  useEffect(() => {
+    if (!isNative) return;
+    void StepCounter.getDiagnostics()
+      .then((data) => setSensor(data.activeSensor))
+      .catch(() => undefined);
+  }, []);
+
+  const changeSensitivity = async (value: number) => {
+    await updateSettings({ sensitivity: value });
+    if (isNative) {
+      try {
+        await StepCounter.setSensitivity({ value });
+      } catch {
+        /* sensor */
+      }
+    }
+  };
+
   const toggleSession = async () => {
     if (active) {
       flush();
@@ -87,25 +108,37 @@ export function Tracker() {
   };
 
   const toggleNative = async () => {
-    const next = !settings.tracking;
-    await updateSettings({ tracking: next });
+    const next = !settings.silentMode;
+    setNativeError(false);
     try {
       if (next) {
-        await StepCounter.start();
+        const granted = await requestNotificationPermission();
+        if (!granted) {
+          setNativeError(true);
+          return;
+        }
+        await StepCounter.requestPermission();
+        const started = await StepCounter.start();
+        if (!started.running) throw new Error('service');
+        await updateSettings({ silentMode: true });
         const result = await StepCounter.getToday();
         syncNative(result.steps, result.running);
+        const diagnostics = await StepCounter.getDiagnostics();
+        setSensor(diagnostics.activeSensor);
       } else {
         await StepCounter.stop();
+        await updateSettings({ silentMode: false });
         syncNative(steps, false);
+        setSensor('none');
       }
     } catch {
-      /* sensor niedostępny */
+      setNativeError(true);
     }
   };
 
   const addManual = async (value: number) => {
     if (value <= 0) return;
-    if (isNative && settings.tracking) {
+    if (isNative && settings.silentMode) {
       try {
         const result = await StepCounter.addSteps({ steps: value });
         syncNative(result.steps, true);
@@ -124,11 +157,19 @@ export function Tracker() {
     }
   };
 
-  const running = isNative ? settings.tracking : active;
+  const running = isNative ? settings.silentMode : active;
   const shownSteps = steps;
+  const sensorLabel =
+    sensor === 'counter'
+      ? t('sensorCounter')
+      : sensor === 'detector'
+        ? t('sensorDetector')
+        : sensor === 'accelerometer'
+          ? t('sensorAccelerometer')
+          : t('sensorUnknown');
   const statusLabel = isNative
-    ? settings.tracking
-      ? t('nativeActive')
+    ? settings.silentMode
+      ? `${t('nativeActive')} · ${sensorLabel}`
       : t('nativeInactive')
     : active
       ? t('liveSession')
@@ -136,9 +177,16 @@ export function Tracker() {
 
   return (
     <div className="safe-top safe-bottom space-y-4 px-5">
-      <header>
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-lime">{t('trackerSub')}</p>
-        <h1 className="mt-1 text-3xl font-extrabold tracking-tight">{t('trackerTitle')}</h1>
+      <header className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-lime">{t('trackerSub')}</p>
+          <h1 className="mt-1 text-3xl font-extrabold tracking-tight">{t('trackerTitle')}</h1>
+        </div>
+        {isNative && (
+          <button type="button" onClick={() => useAppStore.getState().setTab('settings')} className="chip">
+            {t('openDiagnostics')}
+          </button>
+        )}
       </header>
 
       <section className="relative overflow-hidden rounded-4xl border border-white/[0.06] bg-surface/80 p-6 text-center shadow-card backdrop-blur-xl">
@@ -168,10 +216,10 @@ export function Tracker() {
             <button
               type="button"
               onClick={toggleNative}
-              className={`flex-1 ${settings.tracking ? 'btn-ghost' : 'btn-primary'}`}
+              className={`flex-1 ${settings.silentMode ? 'btn-ghost' : 'btn-primary'}`}
             >
-              <Icon name={settings.tracking ? 'pause' : 'play'} size={18} />
-              {settings.tracking ? t('nativeStop') : t('nativeStart')}
+              <Icon name={settings.silentMode ? 'pause' : 'play'} size={18} />
+              {settings.silentMode ? t('nativeStop') : t('nativeStart')}
             </button>
           ) : (
             <button type="button" onClick={toggleSession} className={`flex-1 ${active ? 'btn-ghost' : 'btn-primary'}`}>
@@ -265,6 +313,40 @@ export function Tracker() {
             />
           </div>
         </section>
+      )}
+
+      {isNative && sensor === 'accelerometer' && (
+        <section className="card space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-extrabold">{t('nativeSensitivity')}</p>
+              <p className="mt-0.5 text-[10px] font-medium text-muted">{t('sensitivityNativeNote')}</p>
+            </div>
+            <span className="rounded-full bg-white/5 px-2 py-1 text-[10px] font-extrabold text-lime">
+              {settings.sensitivity.toFixed(1)}×
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0.5}
+            max={2}
+            step={0.1}
+            value={settings.sensitivity}
+            onChange={(event) => void changeSensitivity(Number(event.target.value))}
+            className="w-full accent-lime"
+          />
+          <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-muted">
+            <span>{t('sensitivityLow')}</span>
+            <span>{t('sensitivityHigh')}</span>
+          </div>
+          <p className="text-[10px] font-medium text-muted">{t('sensitivityTestHint')}</p>
+        </section>
+      )}
+
+      {isNative && nativeError && (
+        <p className="rounded-2xl bg-red-500/10 px-4 py-3 text-[11px] font-bold text-red-300">
+          {t('silentError')}
+        </p>
       )}
 
       <section className="card border-cyan/15 bg-cyan/[0.04]">

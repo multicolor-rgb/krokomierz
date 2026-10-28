@@ -20,7 +20,7 @@ export default function App() {
   const ready = useAppStore((s) => s.ready);
   const profile = useAppStore((s) => s.profile);
   const tab = useAppStore((s) => s.tab);
-  const tracking = useAppStore((s) => s.settings.tracking);
+  const silentMode = useAppStore((s) => s.settings.silentMode);
   const init = useAppStore((s) => s.init);
   const started = useRef(false);
 
@@ -42,7 +42,7 @@ export default function App() {
 
     void (async () => {
       try {
-        if (tracking) {
+        if (silentMode) {
           await StepCounter.start();
           const result = await StepCounter.getToday();
           useAppStore.getState().syncNative(result.steps, result.running);
@@ -82,7 +82,7 @@ export default function App() {
       disposed = true;
       for (const sub of subs) void sub.remove();
     };
-  }, [ready, profile, tracking]);
+  }, [ready, profile, silentMode]);
 
   useEffect(() => {
     if (!ready || !profile || isNative) return;

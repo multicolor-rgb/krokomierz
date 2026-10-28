@@ -89,15 +89,19 @@ jobs:
           mkdir -p artifacts
           cp mobile/android/app/build/outputs/apk/release/app-release.apk "artifacts/krokomierz-$VERSION.apk"
           cp mobile/android/app/build/outputs/bundle/release/app-release.aab "artifacts/krokomierz-$VERSION.aab"
+          cp "artifacts/krokomierz-$VERSION.apk" "artifacts/krokomierz-latest.apk"
+          cp "artifacts/krokomierz-$VERSION.aab" "artifacts/krokomierz-latest.aab"
           cd artifacts
+          VERSION_CODE=$(grep -oP 'versionCode \K[0-9]+' ../mobile/android/app/build.gradle | head -1)
           sha256sum "krokomierz-$VERSION.apk" > "krokomierz-$VERSION.apk.sha256"
+          sha256sum "krokomierz-latest.apk" > "krokomierz-latest.apk.sha256"
           SIZE=$(stat -c%s "krokomierz-$VERSION.apk")
           SHA=$(sha256sum "krokomierz-$VERSION.apk" | awk '{print $1}')
           cat > version.json <<JSON
           {
             "version": "$VERSION",
-            "versionCode": 1,
-            "url": "https://krokomierz.multidev.top/download/krokomierz-$VERSION.apk",
+            "versionCode": ${VERSION_CODE:-2},
+            "url": "https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk",
             "size": $SIZE,
             "sha256": "$SHA",
             "date": "$(date -u +%Y-%m-%d)"

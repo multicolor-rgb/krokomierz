@@ -23,17 +23,20 @@ npx cap sync android
 
 echo "▸ Budowanie APK i AAB..."
 cd "$APP/android"
-./gradlew assembleRelease bundleRelease --no-daemon
+./gradlew assembleRelease bundleRelease --no-daemon --max-workers=1
 
 mkdir -p "$OUT"
 APK_SRC="$APP/android/app/build/outputs/apk/release/app-release.apk"
 AAB_SRC="$APP/android/app/build/outputs/bundle/release/app-release.aab"
 APK="$OUT/krokomierz-$VERSION.apk"
 AAB="$OUT/krokomierz-$VERSION.aab"
+LATEST_APK="$OUT/krokomierz-latest.apk"
+LATEST_AAB="$OUT/krokomierz-latest.aab"
 
 cp "$APK_SRC" "$APK"
 cp "$AAB_SRC" "$AAB"
-cp "$APK" "$OUT/krokomierz-latest.apk"
+cp "$APK" "$LATEST_APK"
+cp "$AAB" "$LATEST_AAB"
 
 SHA="$(sha256sum "$APK" | awk '{print $1}')"
 SIZE="$(stat -c%s "$APK")"
@@ -44,13 +47,13 @@ cat > "$OUT/version.json" <<JSON
 {
   "version": "$VERSION",
   "versionCode": $VERSION_CODE,
-  "url": "https://krokomierz.multidev.top/download/krokomierz-$VERSION.apk",
+  "url": "https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk",
   "size": $SIZE,
   "sha256": "$SHA",
   "date": "$(date -u +%Y-%m-%d)",
   "notes": {
-    "pl": "Pierwsze wydanie: licznik w tle, cele, statystyki, osiągnięcia i przypomnienia.",
-    "en": "First release: background counting, goals, stats, achievements and reminders."
+    "pl": "Tryb cichy, fallback akcelerometra dla Redmi 7, diagnostyka sensora, długość kroku i czułość.",
+    "en": "Silent mode, accelerometer fallback for Redmi 7, sensor diagnostics, stride length and sensitivity."
   }
 }
 JSON

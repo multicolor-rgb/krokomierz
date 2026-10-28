@@ -56,8 +56,18 @@ export function effectiveGoal(profile: Profile | null, settings: Settings, days:
   return Math.round((base * (1 + 0.05 * bumps)) / 100) * 100;
 }
 
-export function strideMeters(heightCm: number): number {
-  return (heightCm * 0.415) / 100;
+export function autoStrideCm(heightCm: number, sex: Profile['sex'] = 'other'): number {
+  const factor = sex === 'female' ? 0.413 : 0.415;
+  return +(heightCm * factor).toFixed(1);
+}
+
+export function effectiveStrideCm(profile: Profile | null): number {
+  if (!profile) return autoStrideCm(175);
+  return profile.strideCm && profile.strideCm > 0 ? profile.strideCm : autoStrideCm(profile.heightCm, profile.sex);
+}
+
+export function strideMeters(heightCm: number, strideCm?: number | null): number {
+  return (strideCm && strideCm > 0 ? strideCm : heightCm * 0.415) / 100;
 }
 
 export function buildLog(date: string, steps: number, profile: Profile | null, source: Source): DayLog {
@@ -67,7 +77,7 @@ export function buildLog(date: string, steps: number, profile: Profile | null, s
   return {
     date,
     steps: s,
-    distanceKm: +(s * strideMeters(h) / 1000).toFixed(2),
+    distanceKm: +(s * strideMeters(h, profile?.strideCm ?? autoStrideCm(h, profile?.sex)) / 1000).toFixed(2),
     calories: Math.round(s * w * 0.0005),
     activeMinutes: Math.round(s / 100),
     source,

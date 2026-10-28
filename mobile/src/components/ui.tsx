@@ -122,32 +122,32 @@ export function NumberField({
   return (
     <div>
       <span className="label">{label}</span>
-      <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-1.5">
+      <div className="flex items-center gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1">
         <button
           type="button"
           aria-label="-"
           onClick={() => onChange(clampValue(value - step))}
-          className="grid h-10 w-10 place-items-center rounded-xl bg-white/5 text-muted active:scale-95"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/5 text-muted active:scale-95"
         >
-          <Icon name="minus" size={18} />
+          <Icon name="minus" size={16} />
         </button>
-        <div className="flex flex-1 items-baseline justify-center gap-1">
+        <div className="flex min-w-0 flex-1 items-baseline justify-center gap-1">
           <input
             type="number"
             inputMode="numeric"
             value={Number.isFinite(value) ? value : ''}
             onChange={(event) => onChange(clampValue(Number(event.target.value)))}
-            className="w-full bg-transparent text-center text-2xl font-extrabold tabular outline-none"
+            className="min-w-0 w-full bg-transparent px-1 text-center text-xl font-extrabold tabular outline-none"
           />
-          {unit && <span className="text-xs font-bold text-muted">{unit}</span>}
+          {unit && <span className="shrink-0 text-[10px] font-bold text-muted">{unit}</span>}
         </div>
         <button
           type="button"
           aria-label="+"
           onClick={() => onChange(clampValue(value + step))}
-          className="grid h-10 w-10 place-items-center rounded-xl bg-white/5 text-muted active:scale-95"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/5 text-muted active:scale-95"
         >
-          <Icon name="plus" size={18} />
+          <Icon name="plus" size={16} />
         </button>
       </div>
     </div>

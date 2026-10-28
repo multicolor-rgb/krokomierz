@@ -9,8 +9,9 @@ if (!Capacitor.isNativePlatform() && !import.meta.env.DEV && 'serviceWorker' in 
   // Zapytanie o unikalny build omija cache CDN dla pliku sw.js.
   window.addEventListener('load', () => {
     const build = typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : '1';
+    const swBase = import.meta.env.BASE_URL;
     void navigator.serviceWorker
-      .register(`/app/sw.js?v=${build}`, { scope: '/app/' })
+      .register(`${swBase}sw.js?v=${build}`, { scope: swBase })
       .then((registration) => {
         window.setInterval(() => void registration.update().catch(() => undefined), 60 * 60 * 1000);
       })

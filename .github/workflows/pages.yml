@@ -1,0 +1,88 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            mobile/package-lock.json
+            landing/package-lock.json
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Resolve base path
+        run: |
+          BASE="${{ steps.pages.outputs.base_path }}"
+          if [ -z "$BASE" ] || [ "$BASE" = "/" ]; then
+            BASE="/"
+          else
+            BASE="${BASE%/}/"
+          fi
+          echo "VITE_BASE=$BASE" >> "$GITHUB_ENV"
+          echo "Using base: $BASE"
+
+      - name: Build landing
+        working-directory: landing
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build PWA
+        working-directory: mobile
+        run: |
+          npm ci
+          npm run build
+
+      - name: Assemble site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p _site/download
+          cp -r landing/dist/. _site/
+          mkdir -p _site/app
+          cp -r mobile/dist/. _site/app/
+          touch _site/.nojekyll
+          cp _site/index.html _site/404.html
+          # version.json pochodzi z najnowszego Release (aktualizacje w aplikacji).
+          gh release download --repo "$GITHUB_REPOSITORY" --pattern version.json --dir _site/download --clobber || true
+          if [ -n "${{ vars.PAGES_CNAME }}" ]; then
+            printf '%s\n' "${{ vars.PAGES_CNAME }}" > _site/CNAME
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
