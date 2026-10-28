@@ -12,6 +12,7 @@ export default defineConfig(({ command, mode }) => {
       react(),
       VitePWA({
         disable: native,
+        injectRegister: null,
         registerType: 'autoUpdate',
         includeAssets: ['icons/*.png', 'favicon.svg'],
         manifest: {
@@ -39,6 +40,9 @@ export default defineConfig(({ command, mode }) => {
         },
       }),
     ],
+    define: {
+      __BUILD_ID__: JSON.stringify(Date.now().toString(36)),
+    },
     server: { host: true, port: 5173 },
     build: { target: 'es2020', chunkSizeWarningLimit: 1200 },
   };
