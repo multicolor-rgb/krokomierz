@@ -71,6 +71,7 @@ public class StepCounterPlugin extends Plugin {
         Intent intent = new Intent(getContext(), StepService.class);
         getContext().stopService(intent);
         StepService.RUNNING = false;
+        StepService.ACTIVE_SENSOR = "none";
         call.resolve();
     }
 

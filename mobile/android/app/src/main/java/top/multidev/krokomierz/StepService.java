@@ -195,6 +195,7 @@ public class StepService extends Service implements SensorEventListener {
     @Override
     public void onDestroy() {
         RUNNING = false;
+        ACTIVE_SENSOR = "none";
         releaseWakeLock();
         if (sensorManager != null) sensorManager.unregisterListener(this);
         if (StepStore.isEnabled(this)) scheduleRestart();
