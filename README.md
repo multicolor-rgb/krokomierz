@@ -122,9 +122,9 @@ Klucz release **nigdy nie trafia do repozytorium**. Trzymaj go poza projektem i 
 ./scripts/deploy.sh
 ```
 
-### GitHub Pages (docelowo)
+### GitHub Pages (aktywne)
 
-Strona i PWA są publikowane przez `.github/workflows/pages.yml` na GitHub Pages. APK/AAB pozostają w GitHub Releases, a `version.json` jest kopiowany na Pages z najnowszego Release.
+Strona i PWA są publikowane przez `.github/workflows/pages.yml` na GitHub Pages (custom domain `krokomierz.multidev.top`). APK/AAB pozostają w GitHub Releases, a `version.json` jest kopiowany na Pages z najnowszego Release.
 
 - podgląd project site: `https://multicolor-rgb.github.io/krokomierz/`
 - custom domain: `https://krokomierz.multidev.top/`
@@ -135,7 +135,7 @@ DNS w Cloudflare:
 |---|---|---|---|
 | CNAME | `krokomierz` | `multicolor-rgb.github.io` | **DNS only** (szara chmurka) |
 
-Po propagacji DNS ustaw w GitHub → Settings → Pages custom domain `krokomierz.multidev.top` i włącz **Enforce HTTPS**. Nie używaj orange cloud — GitHub Pages + proxy Cloudflare mogą powodować pętle SSL.
+Domena jest już podłączona przez CNAME i certyfikat Let's Encrypt GitHub Pages. Dla odtworzenia: po propagacji DNS ustaw w GitHub → Settings → Pages custom domain `krokomierz.multidev.top` i włącz **Enforce HTTPS**. Nie używaj orange cloud — GitHub Pages + proxy Cloudflare mogą powodować pętle SSL.
 
 ### Nginx (fallback)
 
