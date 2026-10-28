@@ -17,7 +17,7 @@ export const copy = {
       'Nowoczesny krokomierz na Androida i w przeglądarce. Cele, statystyki, osiągnięcia i przypomnienia. Bez konta, bez chmury, bez reklam.',
     nav: { features: 'Funkcje', how: 'Jak działa', screens: 'Zrzuty', faq: 'FAQ', download: 'Pobierz' },
     hero: {
-      badge: 'Nowość · wersja 1.0.0',
+      badge: 'Nowość · wersja 1.1.1',
       titleA: 'Każdy krok',
       titleB: 'się liczy.',
       sub: 'Nowoczesny krokomierz na Androida i w przeglądarce. Cele, statystyki, osiągnięcia i przypomnienia — bez konta, bez chmury, bez reklam.',
@@ -170,7 +170,7 @@ export const copy = {
       'A modern step counter for Android and the web. Goals, stats, achievements and reminders. No account, no cloud, no ads.',
     nav: { features: 'Features', how: 'How it works', screens: 'Screens', faq: 'FAQ', download: 'Download' },
     hero: {
-      badge: 'New · version 1.0.0',
+      badge: 'New · version 1.1.1',
       titleA: 'Every step',
       titleB: 'counts.',
       sub: 'A modern step counter for Android and the web. Goals, stats, achievements and reminders — no account, no cloud, no ads.',

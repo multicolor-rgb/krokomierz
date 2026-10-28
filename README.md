@@ -98,9 +98,9 @@ ANDROID_HOME=/ścieżka/do/android-sdk \
 Wynik:
 
 ```
-download/krokomierz-1.1.0.apk
-download/krokomierz-1.1.0.aab
-download/krokomierz-1.1.0.apk.sha256
+download/krokomierz-1.1.1.apk
+download/krokomierz-1.1.1.aab
+download/krokomierz-1.1.1.apk.sha256
 download/krokomierz-latest.apk
 download/version.json
 ```
