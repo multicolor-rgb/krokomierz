@@ -2,11 +2,7 @@
   "version": "1.1.2",
   "versionCode": 4,
   "url": "https://github.com/multicolor-rgb/krokomierz/releases/latest/download/krokomierz-latest.apk",
-  "size": 3802548,
-  "sha256": "9221945868606d88cd1b7d72b14287780418159c9b85a61f0d5a670bd2729738",
-  "date": "2026-10-28",
-  "notes": {
-    "pl": "Polityka prywatności i cookies, linki w aplikacji, tryb cichy i fallback akcelerometra.",
-    "en": "Privacy and cookie policy, in-app links, silent mode and accelerometer fallback."
-  }
+  "size": 3802534,
+  "sha256": "466334fd73c39db9533eec4cc2722abc41532a7e6fc795e07ed5cad6ce796a5d",
+  "date": "2026-10-28"
 }
