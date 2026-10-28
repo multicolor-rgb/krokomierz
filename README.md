@@ -6,6 +6,7 @@ Nowoczesny krokomierz w wersji **PWA** i **Android APK**. Ciemny, sportowy inter
 - 📱 Wersja PWA: **https://krokomierz.multidev.top/app/**
 - 💾 APK: **https://krokomierz.multidev.top/download/krokomierz-1.0.0.apk?v=3**
 - 💻 Repozytorium: **https://github.com/multicolor-rgb/krokomierz**
+- 🚀 Releases: **https://github.com/multicolor-rgb/krokomierz/releases/tag/v1.0.0**
 
 ## Zrzuty ekranu
 

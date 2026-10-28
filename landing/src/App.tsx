@@ -14,6 +14,7 @@ import {
 } from './i18n';
 
 const GITHUB = 'https://github.com/multicolor-rgb/krokomierz';
+const RELEASES = 'https://github.com/multicolor-rgb/krokomierz/releases';
 
 function DownloadIcon({ size = 18 }: { size?: number }) {
   return (
@@ -439,7 +440,7 @@ export default function App() {
                     <a href={`/${SHA256}`} className="underline decoration-white/20 underline-offset-4 hover:text-white">
                       {t.download.sha}
                     </a>
-                    <a href={GITHUB} target="_blank" rel="noreferrer" className="hover:text-white">
+                    <a href={RELEASES} target="_blank" rel="noreferrer" className="hover:text-white">
                       {t.download.release}
                     </a>
                   </div>
@@ -530,7 +531,7 @@ export default function App() {
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted">{t.footer.resources}</p>
             <ul className="mt-3 space-y-2 text-[12px] font-bold text-white/75">
-              <li><a href={GITHUB} target="_blank" rel="noreferrer" className="hover:text-lime">{t.footer.github}</a></li>
+              <li><a href={RELEASES} target="_blank" rel="noreferrer" className="hover:text-lime">{t.footer.github}</a></li>
               <li><a href={`/${SHA256}`} className="hover:text-lime">SHA-256</a></li>
               <li><a href="#faq" className="hover:text-lime">FAQ</a></li>
             </ul>
