@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
+import { CapacitorHttp } from '@capacitor/core';
 import { useAppStore } from '../store/useAppStore';
 import { useT } from '../lib/i18n';
 import type { Activity, GoalType, Lang, Sex, Units } from '../lib/types';
@@ -211,9 +212,20 @@ export function Settings() {
   const checkUpdates = async () => {
     setUpdate('checking');
     try {
-      const response = await fetch(`${VERSION_URL}?t=${Date.now()}`, { cache: 'no-store' });
-      if (!response.ok) throw new Error('no version');
-      const data = (await response.json()) as { version?: string; url?: string };
+      let data: { version?: string; url?: string };
+      if (isNative) {
+        // Natywny HTTP omija ograniczenia CORS WebView.
+        const response = await CapacitorHttp.get({
+          url: `${VERSION_URL}?t=${Date.now()}`,
+          headers: { 'Cache-Control': 'no-cache' },
+        });
+        if (response.status < 200 || response.status >= 300) throw new Error('no version');
+        data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+      } else {
+        const response = await fetch(`${VERSION_URL}?t=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error('no version');
+        data = (await response.json()) as { version?: string; url?: string };
+      }
       setUpdateInfo(data);
       if (data.version && data.version !== APP_VERSION) setUpdate('available');
       else setUpdate('latest');

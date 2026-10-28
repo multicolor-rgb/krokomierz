@@ -41,11 +41,19 @@ export function effectiveGoal(profile: Profile | null, settings: Settings, days:
   const base = recommendedSteps(profile);
   if (!settings.autoAdjust) return base;
 
-  const recent = lastNDays(days, 7).filter((d) => d.steps > 0);
-  if (recent.length < 5) return base;
-  const hits = recent.filter((d) => d.steps >= base * 0.9).length;
-  if (hits >= 5) return Math.round(Math.min(base * 1.2, base * 1.05) / 100) * 100;
-  return base;
+  // Progresja: +5% za każde 7 kolejnych dni z celem >= 90%, maksymalnie +20%.
+  const map = new Map(days.map((d) => [d.date, d]));
+  let cursor = startOfDay(new Date());
+  if ((map.get(todayKey())?.steps ?? 0) < base * 0.9) cursor = subDays(cursor, 1);
+  let streak = 0;
+  for (let i = 0; i < 28; i++) {
+    const log = map.get(dayKey(cursor));
+    if (!log || log.steps < base * 0.9) break;
+    streak++;
+    cursor = subDays(cursor, 1);
+  }
+  const bumps = Math.min(4, Math.floor(streak / 7));
+  return Math.round((base * (1 + 0.05 * bumps)) / 100) * 100;
 }
 
 export function strideMeters(heightCm: number): number {

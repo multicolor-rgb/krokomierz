@@ -65,7 +65,7 @@ export function Onboarding() {
       lang,
       tracking: isNative,
       notifications: {
-        enabled: reminders,
+        enabled: reminders && granted,
         time,
         days: [1, 2, 3, 4, 5, 6, 0],
       },
