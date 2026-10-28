@@ -29,6 +29,8 @@ mobile/android/local.properties
 /screens/
 /icons/
 /app/
+/privacy/
+/cookies/
 /og.png
 /logo.svg
 /download/*.apk
