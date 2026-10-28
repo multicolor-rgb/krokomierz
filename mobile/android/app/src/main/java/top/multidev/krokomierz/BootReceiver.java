@@ -12,6 +12,7 @@ public class BootReceiver extends BroadcastReceiver {
         if (intent == null || intent.getAction() == null) return;
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())
             || Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
+            if (!StepStore.isEnabled(context)) return;
             Intent service = new Intent(context, StepService.class);
             try {
                 ContextCompat.startForegroundService(context, service);

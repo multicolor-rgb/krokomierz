@@ -67,6 +67,7 @@ public class StepCounterPlugin extends Plugin {
 
     @PluginMethod
     public void stop(PluginCall call) {
+        StepStore.setEnabled(getContext(), false);
         Intent intent = new Intent(getContext(), StepService.class);
         getContext().stopService(intent);
         StepService.RUNNING = false;
@@ -119,6 +120,7 @@ public class StepCounterPlugin extends Plugin {
     }
 
     private void startService() {
+        StepStore.setEnabled(getContext(), true);
         Intent intent = new Intent(getContext(), StepService.class);
         ContextCompat.startForegroundService(getContext(), intent);
     }

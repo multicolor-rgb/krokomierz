@@ -57,8 +57,9 @@ public class StepService extends Service implements SensorEventListener {
         int raw = Math.round(event.values[0]);
         int steps = StepStore.update(this, raw);
         if (steps != lastSteps) {
+            boolean shouldRefresh = lastSteps == 0 || steps - lastSteps >= 5;
             lastSteps = steps;
-            updateNotification(steps);
+            if (shouldRefresh) updateNotification(steps);
             StepBus.emit(steps);
         }
     }

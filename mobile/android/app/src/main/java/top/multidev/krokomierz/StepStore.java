@@ -19,8 +19,21 @@ public final class StepStore {
     private static final String KEY_LAST = "lastRaw";
     private static final String KEY_STEPS = "steps";
     private static final String KEY_OFFSET = "offset";
+    private static final String KEY_ENABLED = "enabled";
 
     private StepStore() {}
+
+    public static void setEnabled(Context context, boolean enabled) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_ENABLED, enabled)
+            .apply();
+    }
+
+    public static boolean isEnabled(Context context) {
+        return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .getBoolean(KEY_ENABLED, false);
+    }
 
     private static String today() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());

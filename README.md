@@ -7,11 +7,15 @@ Nowoczesny krokomierz w wersji **PWA** i **Android APK**. Ciemny, sportowy inter
 - 💾 APK: **https://krokomierz.multidev.top/download/krokomierz-1.0.0.apk**
 - 💻 Repozytorium: **https://github.com/multicolor-rgb/krokomierz**
 
-![Pulpit](landing/public/screens/home-pl.png)
+## Zrzuty ekranu
+
+| Pulpit | Tracker | Statystyki | Osiągnięcia |
+|---|---|---|---|
+| ![Pulpit](landing/public/screens/home-pl.png) | ![Tracker](landing/public/screens/tracker-pl.png) | ![Statystyki](landing/public/screens/stats-pl.png) | ![Osiągnięcia](landing/public/screens/badges-pl.png) |
 
 ## Funkcje
 
-| | |
+| Funkcja | Opis |
 |---|---|
 | **Licznik kroków** | W APK natywny sensor `TYPE_STEP_COUNTER` + foreground service (liczy w tle). W przeglądarce akcelerometr (`DeviceMotion`) z filtrem i detekcją szczytów. |
 | **Mądre cele** | Rekomendacja z wieku, wzrostu, wagi, płci, aktywności, BMI i celu. Automatyczna progresja do +20%. |
@@ -70,7 +74,7 @@ http://localhost:5173/?demo=1&screen=stats&lang=pl
 Podpisany build wymaga pliku `mobile/android/keystore.properties`:
 
 ```properties
-storeFile=/home/multi/.krokomierz/release.jks
+storeFile=/ścieżka/do/release.jks
 storePassword=********
 keyAlias=krokomierz
 keyPassword=********
