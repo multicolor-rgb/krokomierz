@@ -1,6 +1,6 @@
 export type Lang = 'pl' | 'en';
 
-export const APK_FILE = '/download/krokomierz-1.0.0.apk';
+export const APK_FILE = '/download/krokomierz-1.0.0.apk?v=2';
 export const APK_SIZE = '3,7 MB';
 export const APK_VERSION = '1.0.0';
 export const APK_DATE = '28.10.2026';
