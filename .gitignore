@@ -1,0 +1,48 @@
+# Zależności
+node_modules/
+.pnpm-store/
+
+# Buildy
+dist/
+build/
+mobile/android/app/build/
+mobile/android/build/
+mobile/android/.gradle/
+mobile/android/capacitor-cordova-android-plugins/build/
+mobile/android/app/src/main/assets/public/
+*.apk
+*.aab
+
+# Sekrety i podpisywanie
+*.jks
+*.keystore
+keystore.properties
+mobile/android/keystore.properties
+mobile/android/local.properties
+.env
+.env.*
+!.env.example
+
+# Strona wdrożona w katalogu głównym (artefakty deploy.sh)
+/index.html
+/static/
+/screens/
+/icons/
+/app/
+/og.png
+/logo.svg
+/download/*.apk
+/download/*.aab
+/download/*.sha256
+
+# System i edytory
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+npm-debug.log*
+playwright-report/
+test-results/
+debug.mjs
+shots-landing.mjs
